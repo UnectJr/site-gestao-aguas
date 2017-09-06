@@ -1,0 +1,30 @@
+
+.background-image{
+	position:absolute;
+	left:0;
+	right:0;
+	top:0;
+	bottom:0;
+	background:url("../img/login-background5.jpg");
+	
+/*	-webkit-filter: blur(15px); //efeito desfoque
+    -moz-filter: blur(10px);
+	-o-filter: blur(10px);
+	-ms-filter: blur(10px);
+	filter: blur(30px);	--efeito principal */
+}
+.login-input{
+	display: block;
+    top:50%;
+	left:50%;
+    
+	width: 400px;
+	float:;
+}
+.log{
+	display: inline-block;
+}
+
+.main{
+	display: inline-block;
+}
