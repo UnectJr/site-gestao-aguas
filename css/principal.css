@@ -2,22 +2,24 @@
     display: inline-block;
     width: 320px;
    margin: 17px;
+    overflow: hidden;
+    height: 300px;
 }
 #main {
-  
-    
+
+
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center
 }
 body{
-    background: #e2e1e0;	
+    background: #e2e1e0;
 }
 #logo{
-	
-	height: 200px;
-	
+
+	height: 300px;
+
 	z-index: 0;
 	/*background-color: #000;*/
 }
@@ -28,7 +30,7 @@ body{
 }
 #img-logo{
 
-    max-height:200px;
+    max-height:300px;
     width: auto;
     height: auto;
 }
@@ -38,8 +40,8 @@ body{
 }
 #botao_sidnav{
 	position: fixed;
-	float: left; 
-	margin-left: 0px; 
+	float: left;
+	margin-left: 0px;
 	margin-top: 5px;
 	z-index: 0;
 
@@ -47,7 +49,7 @@ body{
 }
 .all-post{
 	width: 90%;
-	
+
 	text-align: center;
 	background-color: #fff;
 	box-shadow: 0 25px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
@@ -62,11 +64,11 @@ body{
   text-align: left;
   border-radius: 2px;
   display: inline-block;
-  
+
   margin: 1rem;
   box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
   transition: all 0.3s cubic-bezier(.25,.8,.25,1);
- 
+
 }
 .card:hover {
   box-shadow: 0 25px 28px rgba(0,0,0,0.25), 0 15px 15px rgba(0,0,0,0.22);
@@ -74,4 +76,9 @@ body{
 #made-with{
 	text-align: center;
 	margin-top: 70px;
+}
+.img-card{
+   width: auto;
+   max-height: 200px;
+   overflow: hidden;
 }
