@@ -11,10 +11,24 @@ firebase.initializeApp(config);
 var db = firebase.database().ref("reports/cp").once("value", function (snapshot){//recupera ponto de push ids
    var numero_post = snapshot.numChildren();
    console.log(numero_post);
+   var timest = firebase.database.ServerValue.TIMESTAMP;
+   console.log(timest);
 });
 function return_num_pages(numero_post, num_per_page){
    return (numero_post/num_per_page);
 }
+/*function filter_date(min, max){//tratamento de data dando entrada um periodo e ordenado por data mais recente
+   foreach(){
+      if(data >= maior(*-1))
+         if(data <= menor(*-1))){
+         tem retorno
+         }else{
+            stop for each
+         }
+   }
+}
+*/
+
 
 //falta fazer a ordenaçao(se retornar negativo -1*(timestamp) ele ordena automatico) -- feito ou fazendo por flavio
 db = firebase.database().ref().child("reports/cp").orderByChild("data").once("value", function (snapshot) {//recupera ponto de push ids
