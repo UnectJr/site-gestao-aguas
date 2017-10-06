@@ -3,7 +3,16 @@
     width: 320px;
    margin: 17px;
     overflow: hidden;
-    height: 300px;
+    max-height: 450px;
+}
+.date-post{
+   font-size: 12px;
+}
+.pagination{
+   text-align: center;
+}
+.filter{
+   display: inline-block;
 }
 #main {
 
@@ -79,6 +88,6 @@ body{
 }
 .img-card{
    width: auto;
-   max-height: 200px;
+   max-height: 350px;
    overflow: hidden;
 }
