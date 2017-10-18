@@ -1,13 +1,13 @@
 // Initialize Firebase
 var config = {
-  apiKey: "AIzaSyDQFQ59lMT5wk4lFaJ0bUR0UnP0jVZ3IgQ",
-  authDomain: "testewebchat-1a3fa.firebaseapp.com",
-  databaseURL: "https://testewebchat-1a3fa.firebaseio.com",
-  projectId: "testewebchat-1a3fa",
-  storageBucket: "testewebchat-1a3fa.appspot.com",
-  messagingSenderId: "128075295986"
-};
-firebase.initializeApp(config);
+    apiKey: "AIzaSyBiMgfyZ_izdFKLDl05vftWixxaS6xKIyM",
+    authDomain: "app-agua-utfpr.firebaseapp.com",
+    databaseURL: "https://app-agua-utfpr.firebaseio.com",
+    projectId: "app-agua-utfpr",
+    storageBucket: "app-agua-utfpr.appspot.com",
+    messagingSenderId: "142712018169"
+  };
+  firebase.initializeApp(config);
 var db = firebase.database().ref("reports/cp").once("value", function (snapshot){//recupera ponto de push ids
    var numero_post = snapshot.numChildren();
    console.log(numero_post);
@@ -92,3 +92,5 @@ db = firebase.database().ref().child("reports/cp").orderByChild("data").once("va
 
      });
 });
+
+

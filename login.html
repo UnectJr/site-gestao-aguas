@@ -7,34 +7,35 @@
     <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css'>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
      <link rel="stylesheet" href="css/style.css">
-    <title>Login</title>
+	<title>Login</title>
+	<script src="https://www.gstatic.com/firebasejs/4.5.2/firebase.js"></script>
 </head>
 <body>
 	<div class="background-image"></div>
 	<div class="login-input">
 
 		<div class="row">
-	    	<form class="col s12">
+	    	<div class="col s12">
 	    		<div class="row">
 					<div class="input-field col s6 log">
-			        	<input id="id_user" type="text" class="validate">
-			        	<label for="id_user">Usuário</label>
+			        	<input id="txtEmail" type="email" class="validate">
+			        	<label for="txtEmail">Usuário</label>
 			        </div>
 			    
 				<div class="row">
 			        <div class="input-field col s6 log">
-		         		<input id="password" type="password" class="validate">
+		         		<input id="txtPassword" type="password" class="validate">
 		          		<label for="password">Password</label>
 		          	</div>
 	          	</div>
 	          	<div class="row">
-	          		<button class="btn waves-effect waves-light" type="submit" name="action">Entrar
+	          		<button class="btn waves-effect waves-light" type="submit" name="action" id="btnLogin">Entrar
     				<i class="material-icons right">send</i>
   					</button>
 
 	          	</div>
        	 	
-	    	</form>
+	    	</div>
 		</div>
 	
 
@@ -43,5 +44,7 @@
 
     <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
 	<script src='https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js'></script>
+	<script src='js/login.js'></script>
+	
 </body>
 </html>
