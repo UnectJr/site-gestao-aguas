@@ -21,10 +21,17 @@ btnLogin.addEventListener('click', e => {
     const auth = firebase.auth();
 
     const promise = auth.signInWithEmailAndPassword(email,password);
-    promise.catch(e => console.log(e.message));
-    
-    
+    promise.catch(e => {
+        window.alert("Usuário ou senha incorretos.");
+        console.log(e.message);  
+    }) 
 })
+
+document.addEventListener('keypress', function(enter){
+    if(enter.which == 13){
+       btnLogin.click();
+    }
+ }, false);
 firebase.auth().onAuthStateChanged(firebaseUser => {
     if(firebaseUser){
         console.log(firebaseUser);
@@ -34,3 +41,4 @@ firebase.auth().onAuthStateChanged(firebaseUser => {
         console.log("Não está logado");
     }
 })
+
