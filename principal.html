@@ -10,14 +10,22 @@
     <script src="https://www.gstatic.com/firebasejs/4.5.2/firebase.js"></script>
 </head>
 <body>
-    <header>
-        <div class="all-post">
+    <div class="navbar-fixed">
+        <nav class="blue">
+            <div class="nav-wrapper">
+            <a href="#!" class="brand-logo center">Gestão de Águas</a>
+            <ul id="nav-mobile" class="right hide-on-med-and-down">
+                <li><a type="submit" name="action" id="btnLogout">Sair <i class="material-icons right">send</i></a></li>
+            </ul>
+            </div>
+        </nav>
+    </div>
+    <div class="row all-post">
+        <header>
             <div id="logo">
                 <img id="img-logo" src="img/logo1.jpg">
             </div>
-        </div>
-    </header>
-    <div class="row all-post">
+        </header>
 
         <div class="filter">
 
@@ -35,24 +43,34 @@
 
                 <div class="input-field col s6">
                     <select id="opcoes_paginacao">
-                        <option value="5" disabled selected>Reports por página</option>
-                        <option value="5">5 </option>
-                        <option value="10">10 </option>
-                        <option value="20">20 </option>
+                        <option value="6" disabled selected>Reports por página</option>
+                        <option value="6">6 </option>
+                        <option value="12">12 </option>
+                        <option value="24">24 </option>
                     </select>
 
                 </div>
             </div>
             <div class="row">
 
-                <button onclick="setup_config()" class="btn waves-effect waves-light filter-btn " type="submit" name="action">Filtrar
+                <button onclick="setup_config()" class="btn waves-effect waves-light filter-btn blue" type="submit" name="action">Filtrar
                     <i class="material-icons right">check</i>
                 </button>
 
-                <button class="btn waves-effect waves-light" type="submit" name="action" id="btnLogout">Logout
-                    <i class="material-icons right">send</i>
-                </button>
-
+            </div>
+        </div>
+        <div id="loading_content">
+            <div class="row">Carregando...</div>
+            <div class="row preloader-wrapper big active">
+                <div class="spinner-layer spinner-blue-only">
+                    <div class="circle-clipper left">
+                        <div class="circle"></div>
+                    </div><div class="gap-patch">
+                        <div class="circle"></div>
+                    </div><div class="circle-clipper right">
+                        <div class="circle"></div>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="card_insert" class="card_insert"></div>

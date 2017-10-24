@@ -75,7 +75,7 @@ var avancou_pagina = false;
 // Número da página (começa com página 1)
 var numeroPagina = 1;
 // Quantidade de reports por página
-var reportsPorPagina = 5;
+var reportsPorPagina = 6;
 // Primeira query no banco
 var pageQuery = reportsReferencia.orderByChild("data_invertida").limitToFirst(reportsPorPagina);
 // Primeira recuperação dos valores
@@ -84,6 +84,8 @@ pageQuery.on('value', iteracao);
 /********************************* setup_config *********************************/
 
 function setup_config() {
+  // Mostra loading
+  $("#loading_content").removeClass("hide");
   numeroPagina = 1;
   // Recupera valor do select
   reportsPorPagina = parseInt($('#opcoes_paginacao').find(":selected").val());
@@ -95,6 +97,8 @@ function setup_config() {
 /********************************* Próxima página *********************************/
 
 function proximaPagina() {
+  // Mostra loading
+  $("#loading_content").removeClass("hide");
   // Atualizar flags
   ehPrimeiro = true;
   avancou_pagina = true;
@@ -108,6 +112,8 @@ function proximaPagina() {
 
 function paginaAnterior() {
   if(numeroPagina > 1) {
+    // Mostra loading
+    $("#loading_content").removeClass("hide");
     // Atualizar flags
     ehPrimeiro = true;
     avancou_pagina = false;
@@ -175,6 +181,8 @@ function iteracao(snapshot) {
   if(snapshot.exists()){
     // Adiciona cards à página
     $(".card_insert").html(reports);
+    // Esconde loading
+    $("#loading_content").addClass("hide");
     // Verifica se há novos reports
     if(novosValores){
       if(avancou_pagina){
