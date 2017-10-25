@@ -9,32 +9,30 @@ var config = {
   };
 firebase.initializeApp(config);
 
-/*function return_num_pages(numero_post, num_per_page){
-   return (numero_post/num_per_page);
-}*/
-
 /********************************* resolvido_set *********************************/
 
-function resolvido_set(id){//falta tratar o dom para quando nao aceita no cofirm dialog, esta mudando o checked do input
-   var rec_resolvido = firebase.database().ref().child("reports/cp/"+id).once("value", function(snapshot){
-      resolvido_value = snapshot.child("resolvido").val();
-      console.log("resolvido post: "+resolvido_value);
-      if(resolvido_value==true || resolvido_value =='true'){
-         if(confirm("Você está mundando status do post para NÃO RESOLVIDO, tem certeza?")){
-            firebase.database().ref('reports/cp/'+id).update({
-               resolvido: 'false'
-
-            });
-         }
-      }else{
-         if(confirm("Você está mundando status do post para RESOLVIDO, tem certeza?")){
-            firebase.database().ref('reports/cp/'+id).update({
-               resolvido: 'true'
-            });
-         }
+function resolvido_set(id){
+  firebase.database().ref().child("reports/cp/"+id).once("value", function(snapshot){
+    resolvido_value = snapshot.child("resolvido").val();
+    console.log("resolvido post: "+resolvido_value);
+    if(resolvido_value==true || resolvido_value =='true'){
+      if(confirm("Você está mundando status do post para NÃO RESOLVIDO, tem certeza?")){
+        firebase.database().ref('reports/cp/'+id).update({
+          resolvido: 'false'
+        });
+      } else {
+        $("#"+id).prop('checked', true);
       }
-   });
-
+    }else{
+      if(confirm("Você está mundando status do post para RESOLVIDO, tem certeza?")){
+        firebase.database().ref('reports/cp/'+id).update({
+          resolvido: 'true'
+        });
+      } else {
+        $("#"+id).prop('checked', false);
+      }
+    }
+  });
 }
 
 /********************************* timeConverter *********************************/
@@ -139,20 +137,19 @@ function iteracao(snapshot) {
     }
 		// Atualiza última referência da página
 		ultimaReferencia = snapshot.child('data_invertida').val();
-		//console.log(ultimaReferencia);
 
 		//pega valores de ponto push id
 		var data_timestamp =  snapshot.child('data').val();
 		
 		var id = snapshot.key;
 		var date_post = timeConverter(data_timestamp);
-		var resolvido =  snapshot.child("resolvido").val(); //cliar um on click em algum lugar verifica status e compara com boolean que chegar
+		var resolvido =  snapshot.child("resolvido").val();
 		var texto = snapshot.child("texto").val();
 		var img = snapshot.child("imagem").val();
 
 		// template de card com dados
 		var check;
-		if(resolvido==true || resolvido=='true'){//muda o check para resolvidos, fazer a funcção de onclic para mudar dado reoslvido no banco
+		if(resolvido==true || resolvido=='true'){
 		  check = checked="checked";
 		}else{
 		  check = "";
@@ -165,7 +162,7 @@ function iteracao(snapshot) {
 		     '</div>'+
 		     '<div class="card-content">'+
 		     '   <span class="card-title activator grey-text text-darken-4 date-post">'+date_post+'<i class="material-icons right">menu</i></span>'+
-		     '   <p><input type="checkbox" id="'+id+'"'+check+' onclick="resolvido_set(this.id)"  /><label for="'+id+'">Resolvido</label>'+
+		     '   <p><input type="checkbox" id="'+id+'" onclick="resolvido_set(this.id)" '+check+' /><label for="'+id+'">Resolvido</label>'+
 		     '     </p>'+
 		     '</div>'+
 		     '<div class="card-reveal">'+
