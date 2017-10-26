@@ -74,6 +74,10 @@ var avancou_pagina = false;
 var numeroPagina = 1;
 // Quantidade de reports por página
 var reportsPorPagina = 6;
+// Data de início do filtro
+var data_ini;
+// Data fim do filtro
+var data_fim;
 // Primeira query no banco
 var pageQuery = reportsReferencia.orderByChild("data_invertida").limitToFirst(reportsPorPagina);
 // Primeira recuperação dos valores
@@ -85,8 +89,58 @@ function setup_config() {
   // Mostra loading
   $("#loading_content").removeClass("hide");
   numeroPagina = 1;
+  // Filtro data
+  let ini_data = $('#data_ini').val();
+  let fim_data = $('#data_fim').val();
+  // Data início
+  if(ini_data){
+    data_ini = (new Date(ini_data)).getTime() * -1;
+  } else {
+    data_ini = 0;
+  }
+  // Data término
+  if(fim_data){
+    let data_aux = new Date(fim_data);
+    data_aux.setDate(data_aux.getDate() + 1);
+    data_fim = data_aux.getTime() * -1;
+  } else {
+    data_fim = 0;
+  }
   // Recupera valor do select
   reportsPorPagina = parseInt($('#opcoes_paginacao').find(":selected").val());
+  // Executa novamente primeira query
+  if(data_ini && data_fim){
+    if(data_ini < data_fim){
+      Materialize.toast('Data final é maior que inicial!', 4000)
+    } else {
+      pageQuery = reportsReferencia.orderByChild("data_invertida").startAt(data_fim).endAt(data_ini).limitToFirst(reportsPorPagina);
+    }
+  } else if(data_ini){
+    pageQuery = reportsReferencia.orderByChild("data_invertida").endAt(data_ini).limitToFirst(reportsPorPagina);
+  } else if (data_fim) {
+    pageQuery = reportsReferencia.orderByChild("data_invertida").startAt(data_fim).limitToFirst(reportsPorPagina);
+  } else {
+    pageQuery = reportsReferencia.orderByChild("data_invertida").limitToFirst(reportsPorPagina);
+  }
+  pageQuery.on('value', iteracao);
+}
+
+/********************************* limpar filtros *********************************/
+
+function limpar_filtros() {
+  // Mostra loading
+  $("#loading_content").removeClass("hide");
+  numeroPagina = 1;
+  // Datas
+  $('#data_ini').val("");
+  $('#data_fim').val("");
+  // Paginação
+  $('#opcoes_paginacao').prop('selectedIndex', 0);
+  $('#opcoes_paginacao').material_select(); 
+  reportsPorPagina = 6;
+  // Resolução
+  /*$('#opcoes_resolvido').prop('selectedIndex', 0);
+  $('#opcoes_resolvido').material_select();*/
   // Executa novamente primeira query
   pageQuery = reportsReferencia.orderByChild("data_invertida").limitToFirst(reportsPorPagina);
   pageQuery.on('value', iteracao);
@@ -174,12 +228,12 @@ function iteracao(snapshot) {
 		// Adiciona card ao elemento
     reports += div_card;
 	});
+  // Esconde loading
+  $("#loading_content").addClass("hide");
   // Se snapshot tem algum dado
   if(snapshot.exists()){
     // Adiciona cards à página
     $(".card_insert").html(reports);
-    // Esconde loading
-    $("#loading_content").addClass("hide");
     // Verifica se há novos reports
     if(novosValores){
       if(avancou_pagina){
@@ -195,6 +249,7 @@ function iteracao(snapshot) {
   } else {
     // Atualiza flag
     novosValores = false;
+    $(".card_insert").html("");
   }
   // Atualiza número da página
   $("#numero_pagina").text(numeroPagina);

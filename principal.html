@@ -37,12 +37,12 @@
 
                 <div class="input-field col s6 ">
                     <label for="date-filter">Data</label>
-                    <input type="text" name="date-filter" class="datepicker">
+                    <input id="data_ini" type="text" name="date-filter" class="datepicker">
                 </div>
 
                 <div class="input-field col s6 ">
                     <label for="date-filter">Até</label>
-                    <input type="text" name="date-filter" class="datepicker">
+                    <input id="data_fim" type="text" name="date-filter" class="datepicker">
                 </div>
 
                 <div class="input-field col s6">
@@ -52,10 +52,22 @@
                         <option value="12">12 </option>
                         <option value="24">24 </option>
                     </select>
-
                 </div>
+
+                <!--<div class="input-field col s6">
+                    <select id="opcoes_resolvido">
+                        <option value="all" disabled selected>Filtrar por resolução</option>
+                        <option value="all">Todos </option>
+                        <option value="resolved">Resolvidos </option>
+                        <option value="unresolved">Não resolvidos </option>
+                    </select>
+                </div>-->
             </div>
             <div class="row">
+
+                <button onclick="limpar_filtros()" class="btn waves-effect waves-light filter-btn blue" type="submit" name="action">Limpar filtros
+                    <i class="material-icons right">clear</i>
+                </button>
 
                 <button onclick="setup_config()" class="btn waves-effect waves-light filter-btn blue" type="submit" name="action">Filtrar
                     <i class="material-icons right">check</i>
@@ -93,9 +105,6 @@
         $('.datepicker').pickadate({
             selectMonths: true, //controls about months
             selectYears: 50, // how many year can be changed
-            today: 'Hoje',
-            clear: 'Limpar',
-            close: 'Ok',
             container: 'header',
             closeOnSelect: false
         });
