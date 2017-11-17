@@ -136,7 +136,7 @@ function limpar_filtros() {
   $('#data_fim').val("");
   // Paginação
   $('#opcoes_paginacao').prop('selectedIndex', 0);
-  $('#opcoes_paginacao').material_select(); 
+  $('#opcoes_paginacao').material_select();
   reportsPorPagina = 6;
   // Resolução
   /*$('#opcoes_resolvido').prop('selectedIndex', 0);
@@ -194,7 +194,7 @@ function iteracao(snapshot) {
 
 		//pega valores de ponto push id
 		var data_timestamp =  snapshot.child('data').val();
-		
+
 		var id = snapshot.key;
 		var date_post = timeConverter(data_timestamp);
 		var resolvido =  snapshot.child("resolvido").val();
@@ -208,11 +208,11 @@ function iteracao(snapshot) {
 		}else{
 		  check = "";
 		}
-		
+
 		var div_card =
 		 '<div class="card post">'+
-		     '<div class="card-image waves-effect waves-block waves-light img-card">'+
-		        '<img class="activator post-image" src="'+img+'">'+
+		     '<div class="card-image img-card">'+
+		        '<img class="post-image materialboxed" src="'+img+'">'+
 		     '</div>'+
 		     '<div class="card-content">'+
 		     '   <span class="card-title activator grey-text text-darken-4 date-post">'+date_post+'<i class="material-icons right">menu</i></span>'+
@@ -226,14 +226,22 @@ function iteracao(snapshot) {
 		  '</div>';
 
 		// Adiciona card ao elemento
+
     reports += div_card;
+
 	});
   // Esconde loading
+
   $("#loading_content").addClass("hide");
+
   // Se snapshot tem algum dado
   if(snapshot.exists()){
     // Adiciona cards à página
+
     $(".card_insert").html(reports);
+    $('.materialboxed').materialbox();
+
+
     // Verifica se há novos reports
     if(novosValores){
       if(avancou_pagina){
