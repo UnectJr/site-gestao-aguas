@@ -15,6 +15,6 @@ btnLogout_mobile.addEventListener('click', e => {
 firebase.auth().onAuthStateChanged(firebaseUser => {
     if(firebaseUser==null){
         //console.log(firebaseUser);
-        window.location.href = "login.html";
+        window.location.href = "index.html";
     }
 })

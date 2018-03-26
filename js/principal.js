@@ -1,11 +1,11 @@
 // Initialize Firebase
 var config = {
-    apiKey: "AIzaSyBiMgfyZ_izdFKLDl05vftWixxaS6xKIyM",
-    authDomain: "app-agua-utfpr.firebaseapp.com",
-    databaseURL: "https://app-agua-utfpr.firebaseio.com",
-    projectId: "app-agua-utfpr",
-    storageBucket: "app-agua-utfpr.appspot.com",
-    messagingSenderId: "142712018169"
+    apiKey: "AIzaSyBBoXykJeL6R5V9CF-blJmclL8W5iWif6c",
+    authDomain: "projetoextensaoutfpr-80b0e.firebaseapp.com",
+    databaseURL: "https://projetoextensaoutfpr-80b0e.firebaseio.com",
+    projectId: "projetoextensaoutfpr-80b0e",
+    storageBucket: "projetoextensaoutfpr-80b0e.appspot.com",
+    messagingSenderId: "251315204523"
   };
 firebase.initializeApp(config);
 
@@ -14,9 +14,8 @@ firebase.initializeApp(config);
 function resolvido_set(id){
   firebase.database().ref().child("reports/cp/"+id).once("value", function(snapshot){
     resolvido_value = snapshot.child("resolvido").val();
-    console.log("resolvido post: "+resolvido_value);
     if(resolvido_value==true || resolvido_value =='true'){
-      if(confirm("Você está mundando status do post para NÃO RESOLVIDO, tem certeza?")){
+      if(confirm("Você está mudando status do post para NÃO RESOLVIDO, tem certeza?")){
         firebase.database().ref('reports/cp/'+id).update({
           resolvido: 'false'
         });
@@ -24,7 +23,7 @@ function resolvido_set(id){
         $("#"+id).prop('checked', true);
       }
     }else{
-      if(confirm("Você está mundando status do post para RESOLVIDO, tem certeza?")){
+      if(confirm("Você está mudando status do post para RESOLVIDO, tem certeza?")){
         firebase.database().ref('reports/cp/'+id).update({
           resolvido: 'true'
         });
@@ -66,12 +65,12 @@ var ultimaReferencia = null;
 var primeiraReferencia = null;
 // Flag auxiliar para encontrar primeira referência
 var ehPrimeiro = true;
-// Referência da última página
-var novosValores = false;
 // Flag para voltar página
 var avancou_pagina = false;
 // Número da página (começa com página 1)
 var numeroPagina = 1;
+// Número de páginas do resultado da pesquisa
+var totalPaginas = 1;
 // Quantidade de reports por página
 var reportsPorPagina = 6;
 // Data de início do filtro
@@ -80,6 +79,10 @@ var data_ini;
 var data_fim;
 // Primeira query no banco
 var pageQuery = reportsReferencia.orderByChild("data_invertida").limitToFirst(reportsPorPagina);
+// Conta quantas páginas tem
+reportsReferencia.orderByChild("data_invertida").on("value", function(snapshot) {
+  totalPaginas = Math.ceil(snapshot.numChildren() / reportsPorPagina);
+});
 // Primeira recuperação dos valores
 pageQuery.on('value', iteracao);
 
@@ -113,13 +116,29 @@ function setup_config() {
     if(data_ini < data_fim){
       Materialize.toast('Data final é maior que inicial!', 4000)
     } else {
+      // Conta quantas páginas tem
+      reportsReferencia.orderByChild("data_invertida").startAt(data_fim).endAt(data_ini).on("value", function(snapshot) {
+        totalPaginas = Math.ceil(snapshot.numChildren() / reportsPorPagina);
+      });
       pageQuery = reportsReferencia.orderByChild("data_invertida").startAt(data_fim).endAt(data_ini).limitToFirst(reportsPorPagina);
     }
   } else if(data_ini){
+    // Conta quantas páginas tem
+    reportsReferencia.orderByChild("data_invertida").endAt(data_ini).on("value", function(snapshot) {
+      totalPaginas = Math.ceil(snapshot.numChildren() / reportsPorPagina);
+    });
     pageQuery = reportsReferencia.orderByChild("data_invertida").endAt(data_ini).limitToFirst(reportsPorPagina);
   } else if (data_fim) {
+    // Conta quantas páginas tem
+    reportsReferencia.orderByChild("data_invertida").startAt(data_fim).on("value", function(snapshot) {
+      totalPaginas = Math.ceil(snapshot.numChildren() / reportsPorPagina);
+    });
     pageQuery = reportsReferencia.orderByChild("data_invertida").startAt(data_fim).limitToFirst(reportsPorPagina);
   } else {
+    // Conta quantas páginas tem
+    reportsReferencia.orderByChild("data_invertida").on("value", function(snapshot) {
+      totalPaginas = Math.ceil(snapshot.numChildren() / reportsPorPagina);
+    });
     pageQuery = reportsReferencia.orderByChild("data_invertida").limitToFirst(reportsPorPagina);
   }
   pageQuery.on('value', iteracao);
@@ -143,21 +162,29 @@ function limpar_filtros() {
   $('#opcoes_resolvido').material_select();*/
   // Executa novamente primeira query
   pageQuery = reportsReferencia.orderByChild("data_invertida").limitToFirst(reportsPorPagina);
+  // Conta quantas páginas tem
+  reportsReferencia.orderByChild("data_invertida").on("value", function(snapshot) {
+    totalPaginas = Math.ceil(snapshot.numChildren() / reportsPorPagina);
+  });
   pageQuery.on('value', iteracao);
 }
 
 /********************************* Próxima página *********************************/
 
 function proximaPagina() {
-  // Mostra loading
-  $("#loading_content").removeClass("hide");
-  // Atualizar flags
-  ehPrimeiro = true;
-  avancou_pagina = true;
-  // Próxima query
-	pageQuery = reportsReferencia.orderByChild("data_invertida").startAt(ultimaReferencia+1).limitToFirst(reportsPorPagina);
-	// Executa nova query
-  pageQuery.on('value', iteracao);
+  if(numeroPagina < totalPaginas){
+    // Mostra loading
+    $("#loading_content").removeClass("hide");
+    // Atualizar flags
+    ehPrimeiro = true;
+    avancou_pagina = true;
+    // Próxima query
+  	pageQuery = reportsReferencia.orderByChild("data_invertida").startAt(ultimaReferencia+1).limitToFirst(reportsPorPagina);
+    // Incrementa número da página
+    numeroPagina++;
+    // Executa nova query
+    pageQuery.on('value', iteracao);
+  }
 }
 
 /********************************* Página anterior *********************************/
@@ -174,9 +201,6 @@ function paginaAnterior() {
     pageQuery = reportsReferencia.orderByChild("data_invertida").endAt(primeiraReferencia-1).limitToLast(reportsPorPagina);
     // Executa nova query
     pageQuery.on('value', iteracao);
-  }
-  if(numeroPagina === 1) {
-    $("#voltar_pagina").removeClass("waves-effect").addClass("disabled");
   }
 }
 
@@ -236,27 +260,22 @@ function iteracao(snapshot) {
 
   // Se snapshot tem algum dado
   if(snapshot.exists()){
+    if(numeroPagina >= totalPaginas) {
+      $("#avancar_pagina").removeClass("waves-effect").addClass("disabled");
+    }
+    if(numeroPagina === 1) {
+      $("#voltar_pagina").removeClass("waves-effect").addClass("disabled");
+    }
+    if(numeroPagina > 1) {
+      $("#voltar_pagina").removeClass("disabled").addClass("waves-effect");
+    }
+    if(numeroPagina < totalPaginas) {
+      $("#avancar_pagina").removeClass("disabled").addClass("waves-effect");
+    }
     // Adiciona cards à página
-
     $(".card_insert").html(reports);
     $('.materialboxed').materialbox();
-
-
-    // Verifica se há novos reports
-    if(novosValores){
-      if(avancou_pagina){
-        avancou_pagina = false;
-        // Incrementa número da página
-        numeroPagina++;
-        // Altera css
-        $("#voltar_pagina").removeClass("disabled").addClass("waves-effect");
-      }
-    }
-    // Atualiza flag
-    novosValores = true;
   } else {
-    // Atualiza flag
-    novosValores = false;
     $(".card_insert").html("");
   }
   // Atualiza número da página
