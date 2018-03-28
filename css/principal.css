@@ -1,7 +1,7 @@
 .post{
     display: inline-block;
     width: 320px;
-   margin: 17px;
+    margin: 17px;
     overflow: hidden;
     max-height: 450px;
 }
@@ -18,8 +18,6 @@
    float:left;
 }
 #main {
-
-
     display: flex;
     flex-direction: row;
     justify-content: center;
@@ -29,9 +27,7 @@ body{
     background: #e2e1e0;
 }
 #logo{
-
 	height: 300px;
-
 	z-index: 0;
 	/*background-color: #000;*/
 }
@@ -56,12 +52,9 @@ body{
 	margin-left: 0px;
 	margin-top: 5px;
 	z-index: 0;
-
-
 }
 .all-post{
 	width: 90%;
-
 	text-align: center;
 	background-color: #fff;
 	box-shadow: 0 25px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
