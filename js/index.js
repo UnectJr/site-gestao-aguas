@@ -24,9 +24,9 @@ btnLogin.addEventListener('click', e => {
     if(persistentLogin.checked){
         // Caixa de verificação marcada (login persistente)
         const promise = firebase.auth().signInWithEmailAndPassword(email,password);
-        promise.catch(e => {
+        promise.catch(error => {
             window.alert("Usuário ou senha incorretos.");
-            console.log(e.message);  
+            console.log(error.message);  
         })  
     }
     else{
@@ -43,6 +43,7 @@ btnLogin.addEventListener('click', e => {
     }
 })
 
+// apertar enter para logar
 document.addEventListener('keypress', function(enter){
     if(enter.which == 13){
        btnLogin.click();

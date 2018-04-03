@@ -72,7 +72,7 @@ var numeroPagina = 1;
 // Número de páginas do resultado da pesquisa
 var totalPaginas = 1;
 // Quantidade de reports por página
-var reportsPorPagina = 6;
+var reportsPorPagina = 8;
 // Data de início do filtro
 var data_ini;
 // Data fim do filtro
@@ -156,7 +156,7 @@ function limpar_filtros() {
   // Paginação
   $('#opcoes_paginacao').prop('selectedIndex', 0);
   $('#opcoes_paginacao').material_select();
-  reportsPorPagina = 6;
+  reportsPorPagina = 8;
   // Resolução
   /*$('#opcoes_resolvido').prop('selectedIndex', 0);
   $('#opcoes_resolvido').material_select();*/
