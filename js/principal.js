@@ -73,6 +73,8 @@ var numeroPagina = 1;
 var totalPaginas = 1;
 // Quantidade de reports por página
 var reportsPorPagina = 8;
+// Filtrar por local
+var localShow = "todos";
 // Data de início do filtro
 var data_ini;
 // Data fim do filtro
@@ -85,6 +87,8 @@ reportsReferencia.orderByChild("data_invertida").on("value", function(snapshot) 
 });
 // Primeira recuperação dos valores
 pageQuery.on('value', iteracao);
+
+
 
 /********************************* setup_config *********************************/
 
@@ -141,7 +145,29 @@ function setup_config() {
     });
     pageQuery = reportsReferencia.orderByChild("data_invertida").limitToFirst(reportsPorPagina);
   }
+
+  /********************************* Filtro Por Local *********************************/
+
+// Recupera valor do select
+  localShow = ($('#opcoes_local').find(":selected").val());
+  if(localShow!="todos"){
+    reportsReferencia.orderByChild("local").equalTo(localShow).on("value", function(snapshot) {
+      totalPaginas = Math.ceil(snapshot.numChildren() / reportsPorPagina);
+    });
+    pageQuery = reportsReferencia.orderByChild("local").equalTo(localShow).limitToFirst(reportsPorPagina);
+    console.log("Entrou no IF do filtro por local")
+    console.log(pageQuery);
+  }
+  console.log(localShow);
   pageQuery.on('value', iteracao);
+}
+
+/********************************* Filtro Por Status *********************************/
+
+// Recupera valor do select
+let opcoes_resolvido = ($('#opcoes_resolvido').find(":selected").val());
+if(opcoes_resolvido != "all" && opcoes_resolvido == resolved){
+
 }
 
 /********************************* limpar filtros *********************************/
@@ -157,6 +183,7 @@ function limpar_filtros() {
   $('#opcoes_paginacao').prop('selectedIndex', 0);
   $('#opcoes_paginacao').material_select();
   reportsPorPagina = 8;
+  localShow = "Todos";
   // Resolução
   /*$('#opcoes_resolvido').prop('selectedIndex', 0);
   $('#opcoes_resolvido').material_select();*/
@@ -222,7 +249,9 @@ function iteracao(snapshot) {
 		var id = snapshot.key;
 		var date_post = timeConverter(data_timestamp);
 		var resolvido =  snapshot.child("resolvido").val();
-		var texto = snapshot.child("texto").val();
+    var texto = snapshot.child("texto").val();
+    var andar = snapshot.child("andar").val();
+    var local = snapshot.child("local").val();
 		var img = snapshot.child("imagem").val();
 
 		// template de card com dados
@@ -245,7 +274,10 @@ function iteracao(snapshot) {
 		     '</div>'+
 		     '<div class="card-reveal">'+
 		     '   <span class="card-title grey-text text-darken-4 date-post">'+date_post+'<i class="material-icons right">close</i></span>'+
-		     '   <p class="description-post">'+texto+'</p>'+
+         '   <p class="description-post"><b>Local:</b> '+local+'</p>'+
+         '   <p class="description-post"><b>Andar:</b> '+andar+'</p>'+
+         '   <p class="description-post"><b>Descrição:</b> '+texto+'</p>'+
+         
 		     '</div>'+
 		  '</div>';
 

@@ -1,10 +1,10 @@
 var config = {
-    apiKey: "AIzaSyAaiobOgYPey-2zhvXCt6XOyZutpBBpml4",
-    authDomain: "appaguas-utfpr.firebaseapp.com",
-    databaseURL: "https://appaguas-utfpr.firebaseio.com",
-    projectId: "appaguas-utfpr",
-    storageBucket: "",
-    messagingSenderId: "7612106731"
+    apiKey: "AIzaSyBiMgfyZ_izdFKLDl05vftWixxaS6xKIyM",
+    authDomain: "app-agua-utfpr.firebaseapp.com",
+    databaseURL: "https://app-agua-utfpr.firebaseio.com",
+    projectId: "app-agua-utfpr",
+    storageBucket: "app-agua-utfpr.appspot.com",
+    messagingSenderId: "142712018169"
   };
   firebase.initializeApp(config);
 
@@ -24,9 +24,9 @@ btnLogin.addEventListener('click', e => {
     if(persistentLogin.checked){
         // Caixa de verificação marcada (login persistente)
         const promise = firebase.auth().signInWithEmailAndPassword(email,password);
-        promise.catch(error => {
+        promise.catch(e => {
             window.alert("Usuário ou senha incorretos.");
-            console.log(error.message);  
+            console.log(e.message);  
         })  
     }
     else{
@@ -43,7 +43,6 @@ btnLogin.addEventListener('click', e => {
     }
 })
 
-// apertar enter para logar
 document.addEventListener('keypress', function(enter){
     if(enter.which == 13){
        btnLogin.click();
