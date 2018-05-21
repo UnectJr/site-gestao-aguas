@@ -19,7 +19,7 @@ btnLogin.addEventListener('click', e => {
     //pega email e password
     const email = txtEmail.value;
     const password = txtPassword.value;
-    console.log(persistentLogin.checked);
+    //console.log(persistentLogin.checked);
 
     if(persistentLogin.checked){
         // Caixa de verificação marcada (login persistente)
@@ -50,12 +50,18 @@ document.addEventListener('keypress', function(enter){
     }
  }, false);
 firebase.auth().onAuthStateChanged(firebaseUser => {
-    if(firebaseUser){
-        console.log(firebaseUser);
-        window.location.href = "principal.html";
-    }
-    else{
-        console.log("Não está logado");
-    }
+    firebase.database().ref("/users/cp/").once("value", function(snapshot){
+        if(snapshot.hasChild(firebaseUser.uid) && snapshot.child(firebaseUser.uid).child('administrador').val()==true){
+            window.location.href = "principal.html";
+        }
+
+        else
+            window.alert("Usuário não possui privilégios de administrador.");
+    })
+    
+    
 })
+
+firebase.auth().signOut();
+
 
