@@ -9,7 +9,8 @@ var config = {
 };
 firebase.initializeApp(config);
 
-/********************************* resolvido_set *********************************/
+/********************************* adm_set *********************************/
+// Muda privilégios dos usuários
 function adm_set(id){
   firebase.database().ref("/users/cp/"+id).once('value', function(snapshot){
     let adm_value = snapshot.child("administrador").val();
@@ -33,6 +34,8 @@ function adm_set(id){
   });
 }
 
+/********************************* resolvido_set *********************************/
+// Muda status da chave "resolvido"
 function resolvido_set(id){
   firebase.database().ref().child("reports/cp/"+id).once("value", function(snapshot){
     resolvido_value = snapshot.child("resolvido").val();
@@ -99,17 +102,24 @@ var totalPaginas = 1;
 var reportsPorPagina = 8;
 // Filtrar por local
 var localShow = "todos";
+// Filtrar por resolvidos ou não resolvidos
 var opcoes_resolvido = "all";
 // Data de início do filtro
 var data_ini;
 // Data fim do filtro
 var data_fim;
 
+// HTML dos reports
 var reports="";
+
+// HTML dos usuarios
 var users="";
+
+// Variáveis auxiliares
 var snapshotDB,contador,contador_pag;
 
-// Conta quantas páginas tem
+/* Conta quantas páginas serão necessárias para exibir todos os dados do banco
+inicializa a variavel snapshotDB, que armazena todos os dados do banco de dados na memória */
 reportsReferencia.orderByChild("data_invertida").on("value", function(snapshot) {
   totalPaginas = Math.ceil(snapshot.numChildren() / reportsPorPagina);
   snapshotDB = snapshot;
@@ -125,8 +135,11 @@ reportsReferencia.orderByChild("data_invertida").on("value", function(snapshot) 
       resolvido: snap.child("resolvido").val(),
       texto: snap.child("texto").val(),
       uid: snap.child("uid").val(),
+      // Cria um indice com  "resolvido" e "local" e atualiza os novos reports
+      // O indice "resolvido_local" será usado para filtros aninhados
       resolvido_local: snap.child("resolvido").val()+"_"+snap.child("local").val()
     };
+    // Atualiza reports que não possuem a chave "resolvido_local"
     reportsReferencia.child(snap.key).set(update);
     cont = false;
   })
@@ -138,7 +151,7 @@ var pageQuery = reportsReferencia.orderByChild("data_invertida").limitToFirst(re
 pageQuery.on('value', iteracao);
 
 /********************************* setup_config *********************************/
-
+// função que configura os filtros
 function setup_config() {
   // Mostra loading
   $("#loading_content").removeClass("hide");
@@ -160,80 +173,24 @@ function setup_config() {
   } else {
     data_fim = 0;
   }
-  // Recupera valor do select
+  // Recupera valor do select "opcoes_paginacao"
   reportsPorPagina = parseInt($('#opcoes_paginacao').find(":selected").val());
-  // Executa novamente primeira query
- /* if(data_ini && data_fim){
  
-    if(data_ini <= data_fim){
-      console.log(data_ini);
-      console.log(data_fim);
-      Materialize.toast('Data inicial está depois da data final!', 4000)
-    } else {
-      // Conta quantas páginas tem
-      reportsReferencia.orderByChild("data_invertida").startAt(data_fim).endAt(data_ini).on("value", function(snapshot) {
-        totalPaginas = Math.ceil(snapshot.numChildren() / reportsPorPagina);
-      });
-      pageQuery = reportsReferencia.orderByChild("data_invertida").startAt(data_fim).endAt(data_ini).limitToFirst(reportsPorPagina);
-    }
-  } else if(data_ini){
-    // Conta quantas páginas tem
-    reportsReferencia.orderByChild("data_invertida").endAt(data_ini).on("value", function(snapshot) {
-      totalPaginas = Math.ceil(snapshot.numChildren() / reportsPorPagina);
-    });
-    pageQuery = reportsReferencia.orderByChild("data_invertida").endAt(data_ini).limitToFirst(reportsPorPagina);
-  } else if (data_fim) {
-    // Conta quantas páginas tem
-    reportsReferencia.orderByChild("data_invertida").startAt(data_fim).on("value", function(snapshot) {
-      totalPaginas = Math.ceil(snapshot.numChildren() / reportsPorPagina);
-    });
-    pageQuery = reportsReferencia.orderByChild("data_invertida").startAt(data_fim).limitToFirst(reportsPorPagina);
-  } else {
-    // Conta quantas páginas tem
-    reportsReferencia.orderByChild("data_invertida").on("value", function(snapshot) {
-      totalPaginas = Math.ceil(snapshot.numChildren() / reportsPorPagina);
-    });
-    pageQuery = reportsReferencia.orderByChild("data_invertida").limitToFirst(reportsPorPagina);
-  }
-*/
   /********************************* Filtro Por Local *********************************/
 
-// Recupera valor do select
+// Recupera valor do select "opcoes_local"
   localShow = ($('#opcoes_local').find(":selected").val());
-  /*if(localShow!="todos"){
-    reportsReferencia.orderByChild("local").equalTo(localShow).on("value", function(snapshot) {
-      totalPaginas = Math.ceil(snapshot.numChildren() / reportsPorPagina);
-    });
-    pageQuery = reportsReferencia.orderByChild("local").equalTo(localShow).limitToFirst(reportsPorPagina);
-  }*/
-
-
+  
 /********************************* Filtro Por Status *********************************/
 
-// Recupera valor do select
+// Recupera valor do select "opcoes_resolvido"
   opcoes_resolvido = ($('#opcoes_resolvido').find(":selected").val());
-  /*if (opcoes_resolvido != "all"){
-    // Se quiser somente resolvidos
-    if (opcoes_resolvido == "true"){
-      reportsReferencia.orderByChild("resolvido").equalTo(true).on("value", function(snapshot) {
-        totalPaginas = Math.ceil(snapshot.numChildren() / reportsPorPagina);
-      });
-      pageQuery = reportsReferencia.orderByChild("resolvido").equalTo(true).limitToFirst(reportsPorPagina);
-    }
-    // Se quiser somente não resolvidos
-    else{
-      reportsReferencia.orderByChild("resolvido").equalTo(false).on("value", function(snapshot) {
-        totalPaginas = Math.ceil(snapshot.numChildren() / reportsPorPagina);
-      });
-      pageQuery = reportsReferencia.orderByChild("resolvido").equalTo(false).limitToFirst(reportsPorPagina);      
-    }
-  }
-  pageQuery.on('value', iteracao);*/
+ 
   iteracao(snapshotDB);
 }
 
 /********************************* limpar filtros *********************************/
-
+// Retorna todas as variáveis relacionadas aos filtros aos seus valores padrão
 function limpar_filtros() {
   // Mostra loading
   $("#loading_content").removeClass("hide");
@@ -254,9 +211,7 @@ function limpar_filtros() {
   referenciaPaginaAnterior = [,0];
   data_ini = 0;
   data_fim = 0;
-  // Resolução
-  /*$('#opcoes_resolvido').prop('selectedIndex', 0);
-  $('#opcoes_resolvido').material_select();*/
+ 
   // Executa novamente primeira query
   pageQuery = reportsReferencia.orderByChild("data_invertida").limitToFirst(reportsPorPagina);
   // Conta quantas páginas tem
@@ -265,7 +220,6 @@ function limpar_filtros() {
   });
 
   pageQuery.on('value', iteracao);
-  //iteracao(snapshotDB);
 }
 
 /********************************* Próxima página *********************************/
@@ -275,18 +229,12 @@ function proximaPagina() {
     // Mostra loading
     $("#loading_content").removeClass("hide");
     // Atualizar flags
-    //ehPrimeiro = true;
     avancou_pagina = true;
-    // Próxima query
-  //pageQuery = reportsReferencia.orderByChild("data_invertida").startAt(ultimaReferencia+1).limitToFirst(reportsPorPagina);
-    // Incrementa número da página
-    // Executa nova query
+    
     numeroPagina++;
     console.log("Array de referências: "+ referenciaPaginaAnterior);
+    // Executa nova query
     iteracao(snapshotDB,"proxima");
-    
-    
-    //pageQuery.on('value', iteracao);
   }
 }
 
@@ -297,20 +245,99 @@ function paginaAnterior() {
     // Mostra loading
     $("#loading_content").removeClass("hide");
     // Atualizar flags
-    //ehPrimeiro = true;
     avancou_pagina = false;
-    
-    // Próxima query
-    //pageQuery = reportsReferencia.orderByChild("data_invertida").endAt(primeiraReferencia-1).limitToLast(reportsPorPagina);
-    // Executa nova query
+     // Decrementa número da página
     numeroPagina--;
+    // Executa nova query
     iteracao(snapshotDB, "anterior");
-    
-    //pageQuery.on('value', iteracao);
   }
 }
 
 /********************************* Iteração dos reports *********************************/
+function iteracao(snapshot, referencia) {
+  reports = "";
+  contador = 0;
+  contador_pag = 0;
+	snapshot.forEach(function(snapshot) {
+
+    // Busca dentro do snapshot do banco quais os dados que estão na próxima página
+    // com base no último elemento da página atual
+    if (referencia == "proxima" && snapshot.child('data').val()<-1*ultimaReferencia) {
+      filtroData(snapshot);
+    }
+
+    // Busca dentro do snapshot do banco quais os dados que estão na página anterior
+    // com base em no primeiro valor de cada pagina. Estes valores são armazenados
+    // no vetor "referenciaPaginaAnterior" e são atualizados a cada página que deverá ser exibida.
+    else if(referencia == "anterior" 
+            && snapshot.child('data').val()>-1*referenciaPaginaAnterior[numeroPagina+1]
+            && snapshot.child('data').val()<=-1*referenciaPaginaAnterior[numeroPagina]){
+              filtroData(snapshot);
+    }
+    else if (primeiraReferencia<=ultimaReferencia && numeroPagina==1) filtroData(snapshot);      
+
+	});
+  // Esconde loading
+
+  $("#loading_content").addClass("hide");
+
+  // Se snapshot tem algum dado
+  if(snapshot.exists()){
+    if(numeroPagina === 1) {
+      $("#voltar_pagina").removeClass("waves-effect").addClass("disabled");
+    }
+    if(numeroPagina > 1) {
+      $("#voltar_pagina").removeClass("disabled").addClass("waves-effect");
+    }
+  
+    // Adiciona cards à página
+    $(".card_insert").html(reports);
+    $('.materialboxed').materialbox();
+  } else {
+    $(".card_insert").html("");
+  }
+  // Atualiza número da página
+  $("#numero_pagina").text(numeroPagina);
+}
+
+/********************************* Filtro por data *********************************/
+// Nesta função são feitas todas as verificações relacionadas ao filtro por data.
+// Após a verificação dos dados, aqueles que encaixarem na requisição do usuário
+// são passados para a função "makeHTML", onde o HTML é criado para ser exibido.
+
+function filtroData(snapshot){
+  if(localShow=="todos") localShow = "";
+  if(opcoes_resolvido=="all") opcoes_resolvido = "";
+  if(data_ini && data_fim){  
+    if(data_ini <= data_fim){
+      Materialize.toast('Data inicial está depois da data final!', 4000)
+    } else {         
+      if(snapshot.child('data_invertida').val()>data_fim && snapshot.child('data_invertida').val()<=data_ini)
+        makeHTML(snapshot);
+      }
+  } else if(data_ini){
+      if(snapshot.child('data_invertida').val()<=data_ini)
+        makeHTML(snapshot);
+        console.log("Contador: "+contador);
+    } else if (data_fim) {
+        if(snapshot.child('data_invertida').val()>=data_fim)
+          makeHTML(snapshot);
+      } else {
+        makeHTML(snapshot);
+      }
+
+  // verifica a paginação
+  if(contador<reportsPorPagina){
+    $("#avancar_pagina").removeClass("waves-effect").addClass("disabled");
+  }
+  else if(contador_pag>reportsPorPagina || contador>=reportsPorPagina){
+      $("#avancar_pagina").removeClass("disabled").addClass("waves-effect");
+    } 
+}
+
+/********************************* Criação do HTML *********************************/
+// Após passar pelo filtro por data, os dados são novamente filtrados pela chave "resolvido_local".
+// Só serão exibidos os dados que corresponderem à requisição do usuário.
 function makeHTML(snapshot){
   if(contador < reportsPorPagina && snapshot.child('resolvido_local').toJSON().includes(opcoes_resolvido+"_"+localShow)){
     if(contador == 0) ehPrimeiro = true;
@@ -324,7 +351,8 @@ function makeHTML(snapshot){
     } 
     // Atualiza última referência da página
       ultimaReferencia = snapshot.child('data_invertida').val();
-      //pega valores de ponto push id
+
+      //pega valores
       var data_timestamp =  snapshot.child('data').val();
       var id = snapshot.key;
       var date_post = timeConverter(data_timestamp);
@@ -369,86 +397,9 @@ function makeHTML(snapshot){
   
 }
 
-function filtroData(snapshot){
-  if(localShow=="todos") localShow = "";
-  if(opcoes_resolvido=="all") opcoes_resolvido = "";
-  if(data_ini && data_fim){  
-    if(data_ini <= data_fim){
-      Materialize.toast('Data inicial está depois da data final!', 4000)
-    } else {         
-      if(snapshot.child('data_invertida').val()>data_fim && snapshot.child('data_invertida').val()<=data_ini)
-        makeHTML(snapshot);
-      }
-  } else if(data_ini){
-      if(snapshot.child('data_invertida').val()<=data_ini)
-        makeHTML(snapshot);
-        console.log("Contador: "+contador);
-    } else if (data_fim) {
-        if(snapshot.child('data_invertida').val()>=data_fim)
-          makeHTML(snapshot);
-      } else {
-        makeHTML(snapshot);
-      }
 
-  // verifica a paginação
-  if(contador<reportsPorPagina){
-    $("#avancar_pagina").removeClass("waves-effect").addClass("disabled");
-  }
-  else if(contador_pag>reportsPorPagina || contador>=reportsPorPagina){
-      $("#avancar_pagina").removeClass("disabled").addClass("waves-effect");
-    } 
-}
 
-function iteracao(snapshot, referencia) {
-  reports = "";
-  contador = 0;
-  contador_pag = 0;
-	snapshot.forEach(function(snapshot) {
-    //console.log("Referencia: "+referencia);
-    //console.log("Primeira: "+primeiraReferencia+"\nUltima: "+ultimaReferencia);
-    
-    if (referencia == "proxima" && snapshot.child('data').val()<-1*ultimaReferencia) {
-      filtroData(snapshot);
-    }
-
-    else if(referencia == "anterior" 
-            && snapshot.child('data').val()>-1*referenciaPaginaAnterior[numeroPagina+1]
-            && snapshot.child('data').val()<=-1*referenciaPaginaAnterior[numeroPagina]){
-              filtroData(snapshot);
-    }
-     // filtroData(snapshot);
-    else if (primeiraReferencia<=ultimaReferencia && numeroPagina==1) filtroData(snapshot);      
-   // console.log("Numero "+i+": "+snapshot.child('data').val()+"\nUltima referencia: "+-1*ultimaReferencia+"\nPrimeira referencia: "+-1*primeiraReferencia);
-
-	});
-  // Esconde loading
-
-  $("#loading_content").addClass("hide");
-
-  // Se snapshot tem algum dado
-  if(snapshot.exists()){
-   // if(numeroPagina >= totalPaginas) {
-   //   $("#avancar_pagina").removeClass("waves-effect").addClass("disabled");
-  //  }
-    if(numeroPagina === 1) {
-      $("#voltar_pagina").removeClass("waves-effect").addClass("disabled");
-    }
-    if(numeroPagina > 1) {
-      $("#voltar_pagina").removeClass("disabled").addClass("waves-effect");
-    }
-    //if(numeroPagina < totalPaginas) {
-   //   $("#avancar_pagina").removeClass("disabled").addClass("waves-effect");
-   // }
-    // Adiciona cards à página
-    $(".card_insert").html(reports);
-    $('.materialboxed').materialbox();
-  } else {
-    $(".card_insert").html("");
-  }
-  // Atualiza número da página
-  $("#numero_pagina").text(numeroPagina);
-}
-
+/********************************* Mostra usuários *********************************/
 function show_users(){
   contador =0;
   users="";

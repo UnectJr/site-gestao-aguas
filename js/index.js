@@ -1,3 +1,5 @@
+// Este arquivo é responsável pelos métodos de login do site 
+
 var config = {
     apiKey: "AIzaSyAaiobOgYPey-2zhvXCt6XOyZutpBBpml4",
     authDomain: "appaguas-utfpr.firebaseapp.com",
@@ -49,19 +51,25 @@ document.addEventListener('keypress', function(enter){
        btnLogin.click();
     }
  }, false);
+
+
+// Aqui é feita a verificação se o usuário é um administrador 
 firebase.auth().onAuthStateChanged(firebaseUser => {
     firebase.database().ref("/users/cp/").once("value", function(snapshot){
         if(snapshot.hasChild(firebaseUser.uid) && snapshot.child(firebaseUser.uid).child('administrador').val()==true){
             window.location.href = "principal.html";
         }
 
-        else
+        else{
             window.alert("Usuário não possui privilégios de administrador.");
+            // apenas para garantir que não haverão usuários logados
+            firebase.auth().signOut();
+        }
     })
     
     
 })
 
-firebase.auth().signOut();
+
 
 
