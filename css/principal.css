@@ -90,3 +90,8 @@ body{
    max-height: 125px;
    overflow: hidden;
 }
+
+.center-logos{
+  display: inline-block;
+  justify-content: center;
+}

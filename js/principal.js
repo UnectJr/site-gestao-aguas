@@ -175,17 +175,17 @@ function setup_config() {
   }
   // Recupera valor do select "opcoes_paginacao"
   reportsPorPagina = parseInt($('#opcoes_paginacao').find(":selected").val());
- 
+
   /********************************* Filtro Por Local *********************************/
 
 // Recupera valor do select "opcoes_local"
   localShow = ($('#opcoes_local').find(":selected").val());
-  
+
 /********************************* Filtro Por Status *********************************/
 
 // Recupera valor do select "opcoes_resolvido"
   opcoes_resolvido = ($('#opcoes_resolvido').find(":selected").val());
- 
+
   iteracao(snapshotDB);
 }
 
@@ -211,7 +211,7 @@ function limpar_filtros() {
   referenciaPaginaAnterior = [,0];
   data_ini = 0;
   data_fim = 0;
- 
+
   // Executa novamente primeira query
   pageQuery = reportsReferencia.orderByChild("data_invertida").limitToFirst(reportsPorPagina);
   // Conta quantas páginas tem
@@ -230,7 +230,7 @@ function proximaPagina() {
     $("#loading_content").removeClass("hide");
     // Atualizar flags
     avancou_pagina = true;
-    
+
     numeroPagina++;
     console.log("Array de referências: "+ referenciaPaginaAnterior);
     // Executa nova query
@@ -269,12 +269,12 @@ function iteracao(snapshot, referencia) {
     // Busca dentro do snapshot do banco quais os dados que estão na página anterior
     // com base em no primeiro valor de cada pagina. Estes valores são armazenados
     // no vetor "referenciaPaginaAnterior" e são atualizados a cada página que deverá ser exibida.
-    else if(referencia == "anterior" 
+    else if(referencia == "anterior"
             && snapshot.child('data').val()>-1*referenciaPaginaAnterior[numeroPagina+1]
             && snapshot.child('data').val()<=-1*referenciaPaginaAnterior[numeroPagina]){
               filtroData(snapshot);
     }
-    else if (primeiraReferencia<=ultimaReferencia && numeroPagina==1) filtroData(snapshot);      
+    else if (primeiraReferencia<=ultimaReferencia && numeroPagina==1) filtroData(snapshot);
 
 	});
   // Esconde loading
@@ -289,7 +289,7 @@ function iteracao(snapshot, referencia) {
     if(numeroPagina > 1) {
       $("#voltar_pagina").removeClass("disabled").addClass("waves-effect");
     }
-  
+
     // Adiciona cards à página
     $(".card_insert").html(reports);
     $('.materialboxed').materialbox();
@@ -308,10 +308,10 @@ function iteracao(snapshot, referencia) {
 function filtroData(snapshot){
   if(localShow=="todos") localShow = "";
   if(opcoes_resolvido=="all") opcoes_resolvido = "";
-  if(data_ini && data_fim){  
+  if(data_ini && data_fim){
     if(data_ini <= data_fim){
       Materialize.toast('Data inicial está depois da data final!', 4000)
-    } else {         
+    } else {
       if(snapshot.child('data_invertida').val()>data_fim && snapshot.child('data_invertida').val()<=data_ini)
         makeHTML(snapshot);
       }
@@ -332,7 +332,7 @@ function filtroData(snapshot){
   }
   else if(contador_pag>reportsPorPagina || contador>=reportsPorPagina){
       $("#avancar_pagina").removeClass("disabled").addClass("waves-effect");
-    } 
+    }
 }
 
 /********************************* Criação do HTML *********************************/
@@ -348,7 +348,7 @@ function makeHTML(snapshot){
         referenciaPaginaAnterior[numeroPagina] = [primeiraReferencia]
         referenciaPaginaAnterior.push(0);
       }
-    } 
+    }
     // Atualiza última referência da página
       ultimaReferencia = snapshot.child('data_invertida').val();
 
@@ -361,7 +361,7 @@ function makeHTML(snapshot){
       var andar = snapshot.child("andar").val();
       var local = snapshot.child("local").val();
       var img = snapshot.child("imagem").val();
-  
+
       // template de card com dados
       var check;
       if(resolvido==true || resolvido=='true'){
@@ -369,7 +369,7 @@ function makeHTML(snapshot){
       }else{
         check = "";
       }
-  
+
       var div_card =
        '<div class="card post">'+
            '<div class="card-image img-card">'+
@@ -385,16 +385,16 @@ function makeHTML(snapshot){
            '   <p class="description-post"><b>Local:</b> '+local+'</p>'+
            '   <p class="description-post"><b>Andar:</b> '+andar+'</p>'+
            '   <p class="description-post"><b>Descrição:</b> '+texto+'</p>'+
-           
+
            '</div>'+
         '</div>';
-  
+
       // Adiciona card ao elemento
       reports += div_card;
       contador++;
   }
   contador_pag++;
-  
+
 }
 
 
@@ -412,7 +412,7 @@ function show_users(){
           var administrador =  snapshot.child("administrador").val();
           var ra = snapshot.child("ra").val();
           var email = snapshot.child("email").val();
-          
+
           // template de card com dados
           var check;
           if(administrador==true){
@@ -420,7 +420,7 @@ function show_users(){
           }else{
           check = "";
           }
-      
+
           var div_card =
           '<div class="card post">'+
              '<div class="card-image img-card">'+
@@ -432,21 +432,20 @@ function show_users(){
               '     </p>'+
               '</div>'+
               '<div class="card-reveal">'+
-              '   <span class="card-title grey-text text-darken-4 date-post">'+firstname+" "+lastname+'<i class="material-icons right">close</i></span>'+
+              '   <span class="card-title grey-text text-darken-4 date-post" ><b>'+firstname+" "+lastname+'</b><i class="material-icons right">close</i></span>'+
               '   <p class="description-post"><b>Email:</b> '+email+'</p>'+
-              '   <p class="description-post"><b>RA:</b> '+ra+'</p>'+
               '   <p class="description-post"><b>UID:</b> '+uid+'</p>'+
-              
+
               '</div>'+
           '</div>';
-      
+
           // Adiciona card ao elemento
           users += div_card;
           contador++;
 
           $(".card_insert").html(users);
           $('.materialboxed').materialbox();
-      });     
+      });
   });
   $("#avancar_pagina").removeClass("waves-effect").addClass("disabled");
 }
